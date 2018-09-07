@@ -1,9 +1,11 @@
-package com.sadashi.apps.cleanartitecture.presenter
+package com.sadashi.apps.cleanartitecture.presenters
+
+import com.sadashi.apps.cleanartitecture.entities.QiitaTag
 
 interface MainContract {
     interface View {
         var presenter: Presenter
-        fun showTags()
+        fun showTags(tags: List<QiitaTag>)
     }
 
     interface Presenter {

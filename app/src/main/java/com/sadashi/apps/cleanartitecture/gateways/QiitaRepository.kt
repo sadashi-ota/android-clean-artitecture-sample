@@ -1,7 +1,7 @@
-package com.sadashi.apps.cleanartitecture.gateway
+package com.sadashi.apps.cleanartitecture.gateways
 
-import com.sadashi.apps.cleanartitecture.external.infra.QiitaRemoteDataSource
-import com.sadashi.apps.cleanartitecture.external.infra.QiitaTag
+import com.sadashi.apps.cleanartitecture.externals.infra.QiitaRemoteDataSource
+import com.sadashi.apps.cleanartitecture.entities.QiitaTag
 import io.reactivex.Single
 
 class QiitaRepository(

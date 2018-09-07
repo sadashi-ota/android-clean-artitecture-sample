@@ -1,5 +1,6 @@
-package com.sadashi.apps.cleanartitecture.external.infra
+package com.sadashi.apps.cleanartitecture.externals.infra
 
+import com.sadashi.apps.cleanartitecture.entities.QiitaTag
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
