@@ -19,6 +19,7 @@
             android:id="@+id/icon"
             android:layout_width="@dimen/logo_image_size"
             android:layout_height="@dimen/logo_image_size"
+            app:imageUrl="@{tag.icon_url}"
             android:contentDescription="@string/description_logo" />
 
         <TextView
