@@ -5,11 +5,11 @@ import com.sadashi.apps.cleanartitecture.entities.QiitaTag
 import io.reactivex.Single
 
 class QiitaRepository(
-        val remoteDataSource: QiitaRemoteDataSource
+        private val remoteDataSource: QiitaRemoteDataSource
 ) {
 
-    fun getTags(): Single<List<QiitaTag>> {
-        return remoteDataSource.getTags()
+    fun getTags(page: Int): Single<List<QiitaTag>> {
+        return remoteDataSource.getTags(page)
     }
 
     companion object {

@@ -4,4 +4,6 @@
     <string name="description_logo">logo</string>
     <string name="items_count">投稿数</string>
     <string name="followers_count">フォロワー数</string>
+
+    <string name="message_load_error">データの読み込みに失敗しました</string>
 </resources>

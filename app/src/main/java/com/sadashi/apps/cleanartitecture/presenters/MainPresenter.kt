@@ -9,15 +9,29 @@ class MainPresenter(
         private val view: MainContract.View
 ) : MainContract.Presenter {
 
+    private var loadedPage = 0
+    private var isLoading = false
+
     override fun start() {
-        load()
+        loadedPage = 0
+        view.clearTags()
+        loadNextTags()
     }
 
-    override fun load() {
-        qiitaRepository.getTags()
+    override fun loadNextTags() {
+        isLoading = true
+        qiitaRepository.getTags(loadedPage + 1)
                 .subscribeOn(Schedulers.io())
                 .observeOnMainThread()
-                .doOnSuccess { view.showTags(it) }
+                .doOnSuccess {
+                    loadedPage++
+                    isLoading = false
+                    view.showTags(it)
+                }
+                .doOnError {
+                    isLoading = false
+                    view.showError(it)
+                }
                 .subscribe()
 
     }

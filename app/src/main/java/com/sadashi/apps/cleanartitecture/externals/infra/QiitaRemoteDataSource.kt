@@ -19,7 +19,7 @@ class QiitaRemoteDataSource {
         return retrofit.create(QiitaApiService::class.java)
     }
 
-    fun getTags(): Single<List<QiitaTag>> {
-        return apiService.getTags(1, 20, "count")
+    fun getTags(page: Int): Single<List<QiitaTag>> {
+        return apiService.getTags(page, 20, "count")
     }
 }
