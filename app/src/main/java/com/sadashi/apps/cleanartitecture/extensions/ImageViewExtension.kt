@@ -1,6 +1,6 @@
 package com.sadashi.apps.cleanartitecture.extensions
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.text.TextUtils
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
