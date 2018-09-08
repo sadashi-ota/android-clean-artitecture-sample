@@ -13,14 +13,15 @@ import com.sadashi.apps.cleanartitecture.presenters.MainContract
 import kotlinx.android.synthetic.main.main_fragment.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 
-class MainFragment : Fragment(), MainContract.View {
+class MainFragment() : Fragment(), MainContract.View {
+
     override lateinit var presenter: MainContract.Presenter
 
-    private val REQUEST_NEWS_PRELOAD_NUM = 4
-
     companion object {
+        private const val RequestPreLoadNum = 4
         fun newInstance() = MainFragment()
     }
 
@@ -31,7 +32,7 @@ class MainFragment : Fragment(), MainContract.View {
             val lastVisibleItemCount = layoutManager!!.findLastVisibleItemPosition() + 1
             val totalItemCount = layoutManager.itemCount
 
-            if (totalItemCount <= lastVisibleItemCount + REQUEST_NEWS_PRELOAD_NUM) {
+            if (totalItemCount <= lastVisibleItemCount + RequestPreLoadNum) {
                 presenter.loadNextTags()
             }
         }
@@ -44,12 +45,21 @@ class MainFragment : Fragment(), MainContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        refresh_layout.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                presenter.forceRefresh()
+            }
+
+        })
         list_view.adapter = QiitaTagAdapter()
         list_view.addOnScrollListener(scrollListener)
     }
 
     override fun onResume() {
         super.onResume()
+        if (!::presenter.isInitialized) {
+            throw RuntimeException("Presenter is null.")
+        }
         presenter.start()
     }
 
@@ -69,4 +79,7 @@ class MainFragment : Fragment(), MainContract.View {
         Toast.makeText(context, R.string.message_load_error, Toast.LENGTH_SHORT).show()
     }
 
+    override fun showLoading(show: Boolean) {
+        refresh_layout.isRefreshing = show
+    }
 }

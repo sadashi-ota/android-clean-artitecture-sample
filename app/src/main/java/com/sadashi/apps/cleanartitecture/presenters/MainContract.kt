@@ -8,10 +8,12 @@ interface MainContract {
         fun clearTags()
         fun showTags(tags: List<QiitaTag>)
         fun showError(t: Throwable)
+        fun showLoading(show: Boolean)
     }
 
     interface Presenter {
         fun start()
         fun loadNextTags()
+        fun forceRefresh()
     }
 }
