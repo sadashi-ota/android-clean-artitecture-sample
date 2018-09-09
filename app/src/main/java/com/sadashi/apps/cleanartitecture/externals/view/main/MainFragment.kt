@@ -1,19 +1,18 @@
 package com.sadashi.apps.cleanartitecture.externals.view.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sadashi.apps.cleanartitecture.R
 import com.sadashi.apps.cleanartitecture.entities.QiitaTag
 import com.sadashi.apps.cleanartitecture.externals.view.adapters.QiitaTagAdapter
 import com.sadashi.apps.cleanartitecture.presenters.MainContract
 import kotlinx.android.synthetic.main.main_fragment.*
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 
 class MainFragment : Fragment(), MainContract.View {
@@ -45,12 +44,9 @@ class MainFragment : Fragment(), MainContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        refresh_layout.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                presenter.forceRefresh()
-            }
-
-        })
+        refresh_layout.setOnRefreshListener {
+            presenter.forceRefresh()
+        }
         list_view.adapter = QiitaTagAdapter()
         list_view.addOnScrollListener(scrollListener)
     }
