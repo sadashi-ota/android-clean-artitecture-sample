@@ -1,29 +1,26 @@
 package com.sadashi.apps.cleanartitecture.gateways
 
 import com.sadashi.apps.cleanartitecture.externals.infra.QiitaRemoteDataSource
-import com.sadashi.apps.cleanartitecture.entities.QiitaTag
-import io.reactivex.Single
+import com.sadashi.apps.cleanartitecture.extensions.observeOnMainThread
+import com.sadashi.apps.cleanartitecture.usecases.QiitaUseCasePort
+import io.reactivex.schedulers.Schedulers
 
 class QiitaRepository(
         private val remoteDataSource: QiitaRemoteDataSource
-) {
+) : QiitaUseCasePort.OutputFromPresenter {
 
-    fun getTags(page: Int): Single<List<QiitaTag>> {
-        return remoteDataSource.getTags(page)
-    }
+    var useCaseInput: QiitaUseCasePort.InputFromRepository? = null
 
-    companion object {
-
-        private var INSTANCE: QiitaRepository? = null
-
-        @JvmStatic
-        fun getInstance(remoteDataSource: QiitaRemoteDataSource): QiitaRepository {
-            return INSTANCE ?: QiitaRepository(remoteDataSource).also { INSTANCE = it }
-        }
-
-        @JvmStatic
-        fun destroyInstance() {
-            INSTANCE = null
-        }
+    override fun doLoadTags(page: Int) {
+        remoteDataSource.getTags(page)
+                .subscribeOn(Schedulers.io())
+                .observeOnMainThread()
+                .doOnSuccess {
+                    useCaseInput?.didLoadTags(it)
+                }
+                .doOnError {
+                    useCaseInput?.didLoadTagsError(it)
+                }
+                .subscribe()
     }
 }

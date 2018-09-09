@@ -1,13 +1,13 @@
 package com.sadashi.apps.cleanartitecture.presenters
 
-import com.sadashi.apps.cleanartitecture.extensions.observeOnMainThread
-import com.sadashi.apps.cleanartitecture.gateways.QiitaRepository
-import io.reactivex.schedulers.Schedulers
+import com.sadashi.apps.cleanartitecture.entities.QiitaTag
+import com.sadashi.apps.cleanartitecture.usecases.QiitaUseCasePort
 
 class MainPresenter(
-        private val qiitaRepository: QiitaRepository,
         private val view: MainContract.View
-) : MainContract.Presenter {
+) : MainContract.Presenter, QiitaUseCasePort.OutputFromRepository {
+
+    var useCaseInput: QiitaUseCasePort.InputFromPresenter? = null
 
     private var loadedPage = 0
     private var isLoading = false
@@ -22,22 +22,7 @@ class MainPresenter(
         }
 
         isLoading = true
-        qiitaRepository.getTags(loadedPage + 1)
-                .subscribeOn(Schedulers.io())
-                .observeOnMainThread()
-                .doOnSuccess {
-                    loadedPage++
-                    isLoading = false
-                    view.showTags(it)
-                    view.showLoading(false)
-                }
-                .doOnError {
-                    isLoading = false
-                    view.showError(it)
-                    view.showLoading(false)
-                }
-                .subscribe()
-
+        useCaseInput?.doLoadTags(loadedPage + 1)
     }
 
     override fun forceRefresh() {
@@ -46,4 +31,19 @@ class MainPresenter(
         view.clearTags()
         loadNextTags()
     }
+
+    override fun didLoadTags(tags: List<QiitaTag>) {
+        isLoading = false
+        view.showLoading(false)
+
+        view.showTags(tags)
+        loadedPage++
+    }
+
+    override fun didLoadTagsError(t: Throwable) {
+        view.showLoading(false)
+        isLoading = false
+        view.showError(t)
+    }
+
 }
