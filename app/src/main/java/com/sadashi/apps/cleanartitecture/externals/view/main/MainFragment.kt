@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 
-class MainFragment() : Fragment(), MainContract.View {
+class MainFragment : Fragment(), MainContract.View {
 
     override lateinit var presenter: MainContract.Presenter
 
@@ -72,7 +72,7 @@ class MainFragment() : Fragment(), MainContract.View {
     override fun showTags(tags: List<QiitaTag>) {
         val adapter = list_view.adapter as QiitaTagAdapter
         adapter.tags.addAll(tags)
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemRangeChanged(adapter.tags.size - tags.size, tags.size)
     }
 
     override fun showError(t: Throwable) {
